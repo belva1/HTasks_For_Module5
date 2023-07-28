@@ -21,7 +21,7 @@ def article_delete_view(request: HttpRequest, article: str) -> HttpResponse:
 def article_default_comment_view(request: HttpRequest, article: str) -> HttpResponse:
     return HttpResponse(f'Article - "{article}", comment by default.')
 
-def article_new_comment_view(request: HttpRequest, article: str, comment: str) -> HttpResponse:
+def article_comment_create_view(request: HttpRequest, article: str, comment: str) -> HttpResponse:
     return HttpResponse(f'Article - "{article}", new comment - "{comment}"".')
 
 def topics_view(request: HttpRequest) -> HttpResponse:
@@ -53,9 +53,3 @@ def login_view(request: HttpRequest) -> HttpResponse:
 
 def logout_view(request: HttpRequest) -> HttpResponse:
     return HttpResponse('Logout.')
-
-def archive_view(request: HttpRequest, year: int, month: int) -> HttpResponse:
-    if year >= 1000 and year <= 9999 and month in range(1, 13):
-        return HttpResponse('Non archive.')
-    else:
-        raise Http404('Error Http404')

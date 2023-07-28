@@ -41,5 +41,5 @@ urlpatterns = [
     path('<str:article>/update/', views.article_update_view),
     path('<str:article>/delete/', views.article_delete_view),
     path('<str:article>/comment/', views.article_default_comment_view),
-    path('<str:article>/comment/<str:comment>/', views.article_new_comment_view),   
+    path('<str:article>/comment/<str:comment>/', views.article_comment_create_view),   
 ]
