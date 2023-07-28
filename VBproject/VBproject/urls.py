@@ -35,8 +35,6 @@ urlpatterns = [
     path('topics/<str:topic>/subscribe/', views.topic_subscribe_view),
     path('topics/<str:topic>/unsubscribe/', views.topic_unsubscribe_view),
 
-    path('archive/<int:year>/<int:month>/', views.archive_view),
-
     path('<str:article>/', views.article_view),
     path('<str:article>/update/', views.article_update_view),
     path('<str:article>/delete/', views.article_delete_view),
