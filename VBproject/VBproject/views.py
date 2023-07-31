@@ -53,3 +53,6 @@ def login_view(request: HttpRequest) -> HttpResponse:
 
 def logout_view(request: HttpRequest) -> HttpResponse:
     return HttpResponse('Logout.')
+
+def archive_view(request: HttpRequest, year: str, month: str) -> HttpResponse:
+    return HttpResponse(f'Archive: year - {year}, month - {int(month)}.')

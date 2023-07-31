@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
@@ -30,6 +30,8 @@ urlpatterns = [
     path('deactivate/', views.deactivate_view),
     path('login/', views.login_view),
     path('logout/', views.logout_view),
+
+    re_path(r'archive\/(?P<year>\d{4})\/(?P<month>0?[1-9]|1[0-2])\/', views.archive_view),
 
     path('topics/', views.topics_view),
     path('topics/<str:topic>/subscribe/', views.topic_subscribe_view),
