@@ -6,22 +6,25 @@ UserModel = get_user_model()  # table of users
 
 
 class Topic(models.Model):
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=64, unique=True)
     description = models.TextField(max_length=255)
     topic_user = models.ManyToManyField(UserModel, through='TopicUser')
 
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['title', 'id']
+
 
 class TopicUser(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    topic_user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     notify = models.BooleanField(default=False)
 
 
 class Article(models.Model):
-    title = models.TextField(max_length=255)
+    title = models.TextField(max_length=255, unique=True)
     content = models.TextField(validators=[MinLengthValidator(255)])
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
@@ -30,6 +33,9 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ['title', 'id']
 
 
 class Comment(models.Model):
@@ -41,3 +47,5 @@ class Comment(models.Model):
     def __str__(self):
         return self.message
 
+    class Meta:
+        ordering = ['created_at', 'id']
