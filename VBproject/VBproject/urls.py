@@ -21,7 +21,7 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.main_page_view),
+    path('', views.articles_view),
     path('about/', views.descp_view),
     path('create/', views.create_view),
 
@@ -39,9 +39,8 @@ urlpatterns = [
     path('topics/<str:topic>/subscribe/', views.topic_subscribe_view),
     path('topics/<str:topic>/unsubscribe/', views.topic_unsubscribe_view),
 
-    path('<str:article>/', views.article_view),
-    path('<str:article>/update/', views.article_update_view),
+    path('<str:title_article>/', views.article_view),
+    path('<str:title_article>/update/', views.article_update_view),
     path('<str:article>/delete/', views.article_delete_view),
-    path('<str:article>/comment/', views.article_default_comment_view),
-    path('<str:article>/comment/<str:comment>/', views.article_comment_create_view),   
+    path('<str:article>/comment/', views.article_default_comment_view)
 ]
