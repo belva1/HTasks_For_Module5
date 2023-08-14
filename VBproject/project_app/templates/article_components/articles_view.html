@@ -1,0 +1,30 @@
+{%extends 'base.html'%}
+
+{%block title%}
+Articles | Blog
+{%endblock%}
+
+{%block name%}
+<b>Articles | Blog</b>
+{%endblock%}
+
+
+{%block content%}
+{%for article in articles%}
+<ul class="list-group">
+    <li class="list-group-item mt-4">
+        <h2><span>Title: {{article.title}}</span><br></h2>
+        <b>Title: </b>{{article.title}}<br>
+        <b>Related Topics:</b>
+            {%for topic in article.topic.all%}
+            <a>{{topic}}</a>
+            {%endfor%}
+        <br>
+        <b>Created Date: </b>{{article.created_at}}<br>
+        <span><b>Content: </b>{{article.content|truncatechars:'50'}}</span><br>
+        <b>Comments: </b>{{article.comment_count}}<br>
+        <span class="float-right mr-3"><a href="{{article.title}}/">Full version</a></span>
+    </li>
+</ul>
+{%endfor%}
+{%endblock%}

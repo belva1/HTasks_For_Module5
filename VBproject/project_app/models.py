@@ -24,7 +24,7 @@ class TopicUser(models.Model):
 
 
 class Article(models.Model):
-    title = models.TextField(max_length=255, unique=True)
+    title = models.TextField(max_length=64, unique=True)
     content = models.TextField(validators=[MinLengthValidator(255)])
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)

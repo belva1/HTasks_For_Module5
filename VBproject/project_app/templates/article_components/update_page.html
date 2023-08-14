@@ -1,0 +1,27 @@
+{%extends 'base.html'%}
+
+{%block title%}
+Update | Blog
+{%endblock%}
+
+{%block name%}
+<b>Update | Blog</b>
+{%endblock%}
+
+{%block content%}
+{%if update%}
+<div class="container" style="width: 50x;">
+    <form id="update_data" method="POST">
+    {%csrf_token%}
+    {{form}}
+    </form>
+</div>
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button form="update_data" type="button" class="btn btn-outline-secondary">Update</button>
+    <button type="button" class="btn btn-outline-danger">
+        <a href="{% url 'article_view' title_article=get_article.title %}" style="color:black">Cancel</a>
+    </button>
+</div>
+{%endif%}
+{%endblock%}

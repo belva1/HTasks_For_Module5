@@ -16,31 +16,10 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, re_path
-from . import views
+from django.urls import path, include
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.articles_view),
-    path('about/', views.descp_view),
-    path('create/', views.create_view),
-
-    path('profile/<str:username>/', views.profile_view),
-    path('set-userdata/', views.set_user_data_view),
-    path('set-password/', views.set_password_view),
-    path('register/', views.register_view),
-    path('deactivate/', views.deactivate_view),
-    path('login/', views.login_view),
-    path('logout/', views.logout_view),
-
-    re_path(r'archive\/(?P<year>\d{4})\/(?P<month>0?[1-9]|1[0-2])\/', views.archive_view),
-
-    path('topics/', views.topics_view),
-    path('topics/<str:topic>/subscribe/', views.topic_subscribe_view),
-    path('topics/<str:topic>/unsubscribe/', views.topic_unsubscribe_view),
-
-    path('<str:title_article>/', views.article_view),
-    path('<str:title_article>/update/', views.article_update_view),
-    path('<str:article>/delete/', views.article_delete_view),
-    path('<str:article>/comment/', views.article_default_comment_view)
+    path('', include('project_app.urls')),
 ]

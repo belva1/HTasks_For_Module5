@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      {%block title%}
+        Base | Blog
+      {%endblock%}
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+      <div class="container-fluid">
+        {%url 'main_page' as url_main_page%}
+        <a class="navbar-brand {% if url_main_page == request.path%}active{%endif%}" href="{{url_main_page}}">Main Page</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              {%url 'create_page' as url_create_page%}
+              <a class="nav-link {% if url_create_page == request.path%}active{%endif%}" href="{{url_create_page}}">Create New Article</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Profile Settings
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{%url 'profile_page' username='user.username'%}">Profile</a></li>
+                <li><a class="dropdown-item" href="{%url 'login_page'%}">Login</a></li>
+                <li><a class="dropdown-item" href="{%url 'register_page'%}">Registration</a></li>
+                <li><a class="dropdown-item" href="{%url 'change_user_data_page'%}">Change User Data</a></li>
+                <li><a class="dropdown-item" href="{%url 'change_password_page'%}">Change Password</a></li>
+<!--                <li><a class="dropdown-item" href="#">Deactivate</a></li>-->
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Topics
+              </a>
+              <ul class="dropdown-menu">
+                {%for topic in all_topics%}
+                <li><a class="dropdown-item" href="{%url 'topic_view' topic=topic.title%}">{{topic.title}}</a></li>
+                {%endfor%}
+              </ul>
+            </li>
+            <li class="nav-item">
+              {%url 'about_view' as url_about_view%}
+              <a style="font-size: 10px; color: #999; margin-top: 5px;" class="nav-link {% if url_about_view == request.path%}active{%endif%}" href="{{url_about_view}}">about link</a>
+            </li>
+          </ul>
+
+          <span class="navbar-text">
+            {%block name%}
+              <p>Base | Blog</p>
+            {%endblock%}
+          </span>
+        </div>
+      </div>
+    </nav>
+        {%block content%}
+          Test
+        {%endblock%}
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</html>

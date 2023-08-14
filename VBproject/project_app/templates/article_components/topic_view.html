@@ -1,0 +1,45 @@
+{%extends 'base.html'%}
+
+{%block title%}
+Topic | Blog
+{%endblock%}
+
+{%block name%}
+<b>Topic | Blog</b>
+{%endblock%}
+
+{%block content%}
+<!--<p><b>Title:</b> {{topic.title}}</p>-->
+<!--<p><b>Description:</b> {{topic.description}}</p>-->
+<!--<b>Articles:</b>-->
+<!--<ul>-->
+<!--    {%for article in topic_article%}-->
+<!--    <li>-->
+<!--        <a href="{%url 'article_view' title_article=article.title%}">{{article.title}}</a>-->
+<!--    </li>-->
+<!--    {%endfor%}-->
+<!--</ul>-->
+
+<div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Topic Title: {{topic.title}}</h2>
+                        <p class="card-text mt-4"><b>Description:</b> {{topic.description}}</p>
+                        <hr>
+                        <h5><b>Articles:</b></h5>
+                        <ul class="list-group">
+                            {% for article in topic_article %}
+                            <li class="list-group-item">
+                                <a href="{% url 'article_view' title_article=article.title %}">{{ article.title }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{%endblock%}
