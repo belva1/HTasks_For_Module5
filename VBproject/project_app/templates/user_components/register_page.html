@@ -13,8 +13,14 @@ Register | Blog
 <div class="container">
     <form id="add_form" method="POST">
     {%csrf_token%}
-    {{form}}
-    <button form="add_form" type="button" class="btn btn-outline-secondary mt-4">Register</button>
+    {{form.username}}
+    {{form.email}}
+    {{form.password}}
+    {{form.confirm_password}}
+    <div>
+        {{form.errors}}
+    </div>
+    <button form="add_form" type="submit" class="btn btn-outline-secondary mt-4">Register</button>
     </form>
 </div>
 

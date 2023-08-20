@@ -9,7 +9,10 @@ Profile | Blog
 {%endblock%}
 
 {%block content%}
-<p><b>User:</b> {{user}}</p>
+<p><b>User:</b> {{user_components.username}}</p>
+{%if user_components.get_full_name%}
+    <p>First name: {{user_components.first_name}}, Last Name: {{user_components.last_name}}</p>
+{%endif%}
 <b>Recommended articles by your preferred topics:</b>
     {%if not list_of_preferred_topics%}
     <p>You have not preferred topics.</p>
@@ -23,11 +26,12 @@ Profile | Blog
     </ul>
 
     {%endif%}
-
+    {%if user_articles_list%}
     <b>Your articles:</b>
     {%for article in user_articles_list%}
-    <p> {{article.title}}</p>
+    <p> <a style="color: black" href="{%url 'article_view' title_article=article.title%}">{{article.title}}</a></p>
     {%endfor%}
+    {%endif%}
 
 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
     <button type="button" class="btn btn-outline-secondary">

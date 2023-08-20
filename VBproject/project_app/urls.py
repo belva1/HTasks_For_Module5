@@ -28,10 +28,10 @@ urlpatterns = [
     path('profile/<str:username>/', views.profile_view, name='profile_page'),
     path('change-userdata/', views.ChangeUserDataView.as_view(), name='change_user_data_page'),
     path('change-password/', views.ChangePasswordView.as_view(), name='change_password_page'),
-    path('register/', views.RegisterView.as_view(), name='register_page'),
-    path('deactivate/', views.deactivate_view),
-    path('login/', views.LoginView.as_view(), name='login_page'),
-    path('logout/', views.logout_view),
+    path('register/', views.register_view, name='register_page'),
+    path('deactivate/', views.deactivate_view, name='deactivate_view'),
+    path('login/', views.login_view, name='login_view'),
+    path('logout/', views.logout_view, name='logout_view'),
 
     re_path(r'archive\/(?P<year>\d{4})\/(?P<month>0?[1-9]|1[0-2])\/', views.archive_view),
 
@@ -40,9 +40,10 @@ urlpatterns = [
     path('topics/<str:topic>/subscribe/', views.topic_subscribe_view),
     path('topics/<str:topic>/unsubscribe/', views.topic_unsubscribe_view),
 
+    path('denied/', views.update_denied, name='update_denied'),
     path('<str:title_article>/', views.article_view, name='article_view'),
     path('article/create/', views.article_create_view, name='create_page'),
     path('<str:title_article>/update/', views.article_update_view, name='update_page'),
     path('<str:article>/delete/', views.article_delete_view),
-    path('<str:article>/comment/', views.article_default_comment_view)
+    path('<str:article>/comment/', views.article_default_comment_view),
 ]

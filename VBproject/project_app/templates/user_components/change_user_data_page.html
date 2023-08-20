@@ -12,8 +12,26 @@ Change User Data | Blog
 <div class="container">
     <form id="add_form" method="POST">
     {%csrf_token%}
-    {{form}}
-    <button form="add_form" type="button" class="btn btn-outline-secondary mt-4">Change Password</button>
+    <div class="h3 mb-3 fw-normal text-nowrap">
+        Update Data
+    </div>
+    <div class="form-floating">
+        {{form.username}}
+        <label for="username">{{form.username.label}}</label>
+    </div>
+    <div class="form-floating">
+        {{form.email}}
+        <label for="email">{{form.email.label}}</label>
+    </div>
+    <div class="form-floating">
+        {{form.first_name}}
+        <label for="first_name">{{form.first_name.label}}</label>
+    </div>
+    <div class="form-floating">
+        {{form.last_name}}
+        <label for="last_name">{{form.last_name.label}}</label>
+    </div>
+    <button form="add_form" type="submit" class="btn btn-outline-secondary mt-4">Submit</button>
     </form>
 </div>
 {%endblock%}

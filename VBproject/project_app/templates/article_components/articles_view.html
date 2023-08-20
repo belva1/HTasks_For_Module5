@@ -14,7 +14,7 @@ Articles | Blog
 <ul class="list-group">
     <li class="list-group-item mt-4">
         <h2><span>Title: {{article.title}}</span><br></h2>
-        <b>Title: </b>{{article.title}}<br>
+        <b>Title author: <a href="{%url 'profile_page' username=article.article_author.username%}">{{article.article_author}}</a></b><br>
         <b>Related Topics:</b>
             {%for topic in article.topic.all%}
             <a>{{topic}}</a>

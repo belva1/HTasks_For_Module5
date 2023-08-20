@@ -18,21 +18,30 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            {%if request.user.is_authenticated%}
             <li class="nav-item">
               {%url 'create_page' as url_create_page%}
               <a class="nav-link {% if url_create_page == request.path%}active{%endif%}" href="{{url_create_page}}">Create New Article</a>
             </li>
+            {%endif%}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Profile Settings
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{%url 'profile_page' username='user.username'%}">Profile</a></li>
-                <li><a class="dropdown-item" href="{%url 'login_page'%}">Login</a></li>
-                <li><a class="dropdown-item" href="{%url 'register_page'%}">Registration</a></li>
+                {%if request.user.is_authenticated%}
+                {%if request.user.is_staff%}
+                <li><a class="dropdown-item" href="/admin/">Admin page</a></li>
+                {%endif%}
+                <li><a class="dropdown-item" href="{%url 'profile_page' username=user.username%}">Profile</a></li>
                 <li><a class="dropdown-item" href="{%url 'change_user_data_page'%}">Change User Data</a></li>
                 <li><a class="dropdown-item" href="{%url 'change_password_page'%}">Change Password</a></li>
-<!--                <li><a class="dropdown-item" href="#">Deactivate</a></li>-->
+                <li><a class="dropdown-item" href="{%url 'logout_view'%}">Log Out</a></li>
+                <li><a class="dropdown-item" href="{%url 'deactivate_view'%}">Deactivate</a></li>
+                {%else%}
+                <li><a class="dropdown-item" href="{%url 'login_view'%}">Login</a></li>
+                <li><a class="dropdown-item" href="{%url 'register_page'%}">Registration</a></li>
+                {%endif%}
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -47,7 +56,7 @@
             </li>
             <li class="nav-item">
               {%url 'about_view' as url_about_view%}
-              <a style="font-size: 10px; color: #999; margin-top: 5px;" class="nav-link {% if url_about_view == request.path%}active{%endif%}" href="{{url_about_view}}">about link</a>
+              <a class="nav-link {% if url_about_view == request.path%}active{%endif%}" href="{{url_about_view}}">about link</a>
             </li>
           </ul>
 

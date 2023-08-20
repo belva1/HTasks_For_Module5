@@ -1,69 +1,98 @@
 {%extends 'base.html'%}
 
 {%block title%}
-Description | Blog
+Article | Blog
 {%endblock%}
 
 {%block name%}
-<b>Description | Blog</b>
+<b>Article | Blog</b>
 {%endblock%}
+
 
 {%block content%}
 
-<head>
-    <title>About Us - Self-Improvement</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f7f7f7;
-            color: #333;
-        }
-        .header {
-            background-color: #ddd;
-            color: #333;
-            text-align: center;
-            padding: 2rem 0;
-            border-bottom: 2px solid #bbb;
-        }
-        .header h1 {
-            font-family: 'Pacifico', cursive;
-            font-size: 3rem;
-            margin: 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 2rem;
-            background-color: #fff;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        .about-section {
-            text-align: center;
-            padding: 2rem;
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="header">
-        <h1>Self-Improvement<br>About Us</h1>
-    </div>
-    <div class="container">
-        <div class="about-section">
-            <h2>Self-Improvement: Our Journey Towards Growth</h2>
-            <p>Welcome to our website dedicated to self-improvement! We believe in the power of personal growth and continuous learning. Our mission is to provide you with inspiration, tools, and resources to embark on your own journey of self-discovery and development.</p>
-        </div>
-        <div class="about-section">
-            <h2>What We Offer</h2>
-            <p>Our platform offers a wide range of articles, tips, and guides on various aspects of self-improvement. Whether you're interested in enhancing your productivity, boosting your confidence, or cultivating healthy habits, you'll find valuable insights and practical advice here.</p>
-        </div>
-        <div class="about-section">
-            <h2>Join Us on the Path to Excellence</h2>
-            <p>We're passionate about fostering a community of individuals who are dedicated to becoming the best versions of themselves. Together, we can support and motivate each other to achieve personal and professional success. Join us on this exciting journey towards excellence!</p>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Article Title: {{article_obj.title}}</h2>
+                    <b>Title author: <a href="{%url 'profile_page' username=article_obj.article_author.username%}">{{article_obj.article_author}}</a></b>
+                    <p class="card-text mt-4"><b>Related Topics:</b>
+                    {%for topic in article_obj.topic.all%}
+                    <a>{{topic}}</a>
+                    {%endfor%}
+                    </p><br>
+                    <p class="card-text"><b>Content:<br></b> {{article_obj.content}}</p>
+                    <div class="card-subtitle text-muted mb-3">
+                        <small>Created Date: {{article_obj.created_at}}</small>
+                    </div>
+                    <div class="card-subtitle text-muted">
+                        <small>Updated Date: {{article_obj.updated_at}}</small>
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="button" class="btn btn-outline-secondary">
+                        <a href="{% url 'update_page' title_article=article_obj.title %}" style="color:black">Update</a>
+                    </button>
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                      Delete
+                    </button>
+
+                </div>
+            </div>
+
+            {%if comments%}
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h2 class="card-title">Comments</h2>
+                    <div class="media">
+<!--                        <img src="https://via.placeholder.com/64" class="mr-3 rounded-circle" alt="avatar">-->
+                        <div class="media-body">
+<!--                            <h6 class="mt-0">name</h6>-->
+                                {%for comment in comments%}
+                                    <p><b><a href="{%url 'profile_page' username=comment.comment_author.username%}">{{comment.comment_author}}</a></b> | <a style="color:rgba(0,0,0,0.5)">{{comment.created_at}}</a></p>
+                                    <p>{{comment.message}}</p>
+                                {%endfor%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {%endif%}
         </div>
     </div>
-</body>
+</div>
+
+
+<!-- Modal For Delete Article -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      {%if article_obj.article_author == request.user%}
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Article</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <b>{{article_obj.title}}</b><br>
+        Are you sure you want to delete this article?
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Yes, I am sure</button>
+        <button type="button" class="btn btn-outline-danger">
+            <a href="{% url 'article_view' title_article=article_obj.title %}" style="color:black">Cancel</a>
+        </button>
+      </div>
+      {%else%}
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">You are not the author of this article.</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      {%endif%}
+    </div>
+  </div>
+</div>
 {%endblock%}

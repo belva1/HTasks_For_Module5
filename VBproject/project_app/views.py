@@ -1,13 +1,14 @@
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db.models import Count
-from django.http import HttpRequest, HttpResponse, Http404
+from django.http import HttpRequest, HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
+
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import CreateView, UpdateView
 
-from .forms import ArticleForm, AuthUserForm, RegisterUserForm, ChangePasswordForm, ChangeUserDataForm
+from .forms import ArticleForm, LoginViewForm,  ChangePasswordForm, ChangeUserDataForm, RegisterViewForm
 from .models import Article, Comment, UserModel, Topic
 from .services import get_topics
 
@@ -43,6 +44,9 @@ def article_view(request, title_article):
 
 
 def article_create_view(request):
+    if not request.user.is_authenticated:
+        url = reverse('login_view')
+        return HttpResponseRedirect(url)
     template = 'article_components/create_page.html'
     context = {
         'form': ArticleForm(),
@@ -57,10 +61,9 @@ def article_update_view(request, title_article):
     except Article.DoesNotExist:
         raise Http404('Article with this title does not exist.')
 
-    # if request.method == 'POST':
-    #     form = ArticleForm(request.POST, instance=get_article)
-    #     if form.is_valid():
-    #         form.save()
+    if get_article.article_author != request.user:
+        url = reverse('update_denied')
+        return HttpResponseRedirect(url)
 
     context = {
         'get_article': get_article,
@@ -83,6 +86,11 @@ def article_delete_view(request, article):
         'delete': True,
     }
     return render(request, template, context)
+
+
+def update_denied(request):
+    template = 'article_components/update_denied.html'
+    return render(request, template)
 
 
 def article_default_comment_view(request, article):
@@ -141,8 +149,6 @@ def profile_view(request, username) -> HttpResponse:
     #  Here, instead of intercepting with an exception, I decided to use the method get_object_or_404
     user: UserModel = get_object_or_404(UserModel, username=username)
     list_of_preferred_topics = get_topics(user)
-    # if not list_of_preferred_topics:
-    #     list_of_preferred_topics = ['No preferred topics.']
     user_articles_list = Article.objects.filter(article_author=user)
     context = {
         'user_components': user,
@@ -152,65 +158,89 @@ def profile_view(request, username) -> HttpResponse:
     return render(request, template, context)
 
 
-class ChangeUserDataView(UpdateView):
+class ChangeUserDataView(View):
     template_name = 'user_components/change_user_data_page.html'
     form_class = ChangeUserDataForm
-    success_url = reverse_lazy('change_user_data_page')
     model = User
 
     def get_object(self, queryset=None):
         return self.request.user
 
+    def get(self, request):
+        if not self.request.user.is_authenticated:
+            return redirect('login_view')
+        user_data = {
+            'username': request.user.username,
+            'email': request.user.email,
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+        }
+        form = self.form_class(user_data)
+        return render(request, self.template_name, {'form': form})
+
+    def get_success_url(self):
+        return reverse_lazy('profile_page', kwargs={'username': self.request.user.username})
+
 
 class ChangePasswordView(View):
     template_name = 'user_components/change_password_page.html'
     form_class = ChangePasswordForm
+    success_url = reverse_lazy('login_view')
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
+        if not self.request.user.is_authenticated:
+            return redirect('login_view')
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
 
-    # def post(self, request, *args, **kwargs):
-    #     form = self.form_class(request.POST)
-    #     if form.is_valid():
-    #
-    #         return redirect('set_password_page')
-    #     return render(request, self.template_name, {'form': form})
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.change_password(request.user)
+            # Redirect to the success URL after successful password change
+            return redirect(self.success_url)
+        return render(request, self.template_name, {'form': form})
 
 
-class RegisterView(CreateView):
-    model = User
-    template_name = 'user_components/register_page.html'
-    form_class = RegisterUserForm
-    success_url = reverse_lazy('register_page')
-
-# def register_view(request: HttpRequest):
-#     template = 'register_page.html'
-#     context = {
-#
-#     }
-#     return render(request, template, context)
-
-
-def deactivate_view(request: HttpRequest) -> HttpResponse:
-    return HttpResponse('Deactivate Form.')
+def register_view(request):
+    template = 'user_components/register_page.html'
+    if request.method == 'POST':
+        form = RegisterViewForm(request.POST)
+        if form.is_valid():
+            form.create_user()
+            url = reverse('login_view')
+            return HttpResponseRedirect(url)
+    else:
+        form = RegisterViewForm()
+    return render(request, template, {'form': form})
 
 
-class LoginView(LoginView):
-    template_name = 'user_components/login_page.html'
-    form_class = AuthUserForm
-    success_url = reverse_lazy('login_page')
-
-# def login_view(request: HttpRequest) -> HttpResponse:
-#     template = 'login_page.html'
-#     context = {
-#         'form': ,
-#     }
-#     return render(request, template, context)
+def deactivate_view(request):
+    user = request.user
+    user.is_active = False
+    user.save()
+    url = reverse('login_view')
+    return HttpResponseRedirect(url)
 
 
-def logout_view(request: HttpRequest) -> HttpResponse:
-    return HttpResponse('Logout.')
+def login_view(request):
+    template = 'user_components/login_view.html'
+    if request.method == 'POST':
+        form = LoginViewForm(request.POST)
+        if form.is_valid():
+            user = authenticate(**form.cleaned_data)  # return data, clean the form
+            login(request, user)
+            url = reverse('profile_page', kwargs={'username': user.username})
+            return HttpResponseRedirect(url)
+    else:
+        form = LoginViewForm()
+    return render(request, template, {'form': form})
+
+
+def logout_view(request):
+    url = reverse('login_view')
+    logout(request)
+    return HttpResponseRedirect(url)
 
 
 def archive_view(request: HttpRequest, year: str, month: str) -> HttpResponse:

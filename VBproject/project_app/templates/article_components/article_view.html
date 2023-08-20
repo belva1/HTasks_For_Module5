@@ -17,6 +17,7 @@ Article | Blog
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">Article Title: {{article_obj.title}}</h2>
+                    <b>Title author: <a href="{%url 'profile_page' username=article_obj.article_author.username%}">{{article_obj.article_author}}</a></b>
                     <p class="card-text mt-4"><b>Related Topics:</b>
                     {%for topic in article_obj.topic.all%}
                     <a>{{topic}}</a>
@@ -30,7 +31,6 @@ Article | Blog
                         <small>Updated Date: {{article_obj.updated_at}}</small>
                     </div>
                 </div>
-<!--                <div style="position: absolute; bottom: 0; right: 0;">-->
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button type="button" class="btn btn-outline-secondary">
                         <a href="{% url 'update_page' title_article=article_obj.title %}" style="color:black">Update</a>
@@ -67,10 +67,10 @@ Article | Blog
 
 
 <!-- Modal For Delete Article -->
-
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+      {%if article_obj.article_author == request.user%}
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Article</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -86,9 +86,13 @@ Article | Blog
             <a href="{% url 'article_view' title_article=article_obj.title %}" style="color:black">Cancel</a>
         </button>
       </div>
+      {%else%}
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">You are not the author of this article.</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      {%endif%}
     </div>
   </div>
 </div>
-
 {%endblock%}
-
