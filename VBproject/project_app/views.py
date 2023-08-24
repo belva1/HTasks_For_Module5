@@ -181,6 +181,17 @@ class ChangeUserDataView(View):
     def get_success_url(self):
         return reverse_lazy('profile_page', kwargs={'username': self.request.user.username})
 
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return redirect('login_view')
+
+        form = self.form_class(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect(self.get_success_url())
+
+        return render(request, self.template_name, {'form': form})
+
 
 class ChangePasswordView(View):
     template_name = 'user_components/change_password_page.html'
@@ -224,7 +235,7 @@ def deactivate_view(request):
 
 
 def login_view(request):
-    template = 'user_components/login_view.html'
+    template = 'user_components/login_page.html'
     if request.method == 'POST':
         form = LoginViewForm(request.POST)
         if form.is_valid():
