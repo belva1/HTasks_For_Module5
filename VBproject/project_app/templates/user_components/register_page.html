@@ -1,0 +1,27 @@
+{%extends 'base.html'%}
+
+{%block title%}
+Register | Blog
+{%endblock%}
+
+{%block name%}
+<b>Register | Blog</b>
+{%endblock%}
+
+
+{%block content%}
+<div class="container">
+    <form id="add_form" method="POST">
+    {%csrf_token%}
+    {{form.username}}
+    {{form.email}}
+    {{form.password}}
+    {{form.confirm_password}}
+    <div>
+        {{form.errors}}
+    </div>
+    <button form="add_form" type="submit" class="btn btn-outline-secondary mt-4">Register</button>
+    </form>
+</div>
+
+{%endblock%}

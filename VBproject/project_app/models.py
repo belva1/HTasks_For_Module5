@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator
 
-UserModel = get_user_model()  # table of users
+UserModel = get_user_model()
 
 
 class Topic(models.Model):
@@ -14,7 +14,7 @@ class Topic(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['title', 'id']
+        ordering = ['title']
 
 
 class TopicUser(models.Model):
@@ -24,7 +24,7 @@ class TopicUser(models.Model):
 
 
 class Article(models.Model):
-    title = models.TextField(max_length=255, unique=True)
+    title = models.TextField(max_length=64, unique=True)
     content = models.TextField(validators=[MinLengthValidator(255)])
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
@@ -35,7 +35,7 @@ class Article(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['title', 'id']
+        ordering = ['title']
 
 
 class Comment(models.Model):
@@ -48,4 +48,4 @@ class Comment(models.Model):
         return self.message
 
     class Meta:
-        ordering = ['created_at', 'id']
+        ordering = ['created_at']

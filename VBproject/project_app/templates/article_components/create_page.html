@@ -1,0 +1,29 @@
+{%extends 'base.html'%}
+
+{%block title%}
+Create Article | Blog
+{%endblock%}
+
+{%block name%}
+<b>Create Article | Blog</b>
+{%endblock%}
+
+{%block content%}
+
+<div class="container" style="width: 50x;">
+    <form id="add_form" method="POST">
+    {%csrf_token%}
+    {{form}}
+    </form>
+</div>
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-30">
+    <button type="button" class="btn btn-outline-secondary">
+        <a href="" style="color:black">Create</a>
+    </button>
+    <button type="button" class="btn btn-outline-danger">
+        <a href="{{url_main_page}}" style="color:black">Close</a>
+    </button>
+</div>
+
+{%endblock%}

@@ -1,0 +1,44 @@
+{%extends 'base.html'%}
+
+{%block title%}
+Profile | Blog
+{%endblock%}
+
+{%block name%}
+<b>Profile | Blog</b>
+{%endblock%}
+
+{%block content%}
+<p><b>User:</b> {{user_components.username}}</p>
+{%if user_components.get_full_name%}
+    <p>First name: {{user_components.first_name}}, Last Name: {{user_components.last_name}}</p>
+{%endif%}
+<b>Recommended articles by your preferred topics:</b>
+    {%if not list_of_preferred_topics%}
+    <p>You have not preferred topics.</p>
+    {%else%}
+    <ul>
+        {%for article in list_of_preferred_topics%}
+        <li>
+            <a href="{%url 'article_view' title_article=article.title%}">{{article.title}}</a>
+        </li>
+        {%endfor%}
+    </ul>
+
+    {%endif%}
+    {%if user_articles_list%}
+    <b>Your articles:</b>
+    {%for article in user_articles_list%}
+    <p> <a style="color: black" href="{%url 'article_view' title_article=article.title%}">{{article.title}}</a></p>
+    {%endfor%}
+    {%endif%}
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button type="button" class="btn btn-outline-secondary">
+        <a href="{% url 'change_user_data_page' %}" style="color:black">Change Data</a>
+    </button>
+    <button type="button" class="btn btn-outline-danger">
+      <a href="{% url 'change_password_page' %}" style="color:black">Change Password</a>
+    </button>
+</div>
+{%endblock%}

@@ -1,0 +1,25 @@
+{%extends 'base.html'%}
+
+{%block title%}
+Login | Blog
+{%endblock%}
+
+{%block name%}
+<b>Login | Blog</b>
+{%endblock%}
+
+
+{%block content%}
+<div class="container">
+    <form id="add_form" method="POST">
+    {%csrf_token%}
+    {{form.username}}
+    {{form.password}}
+    <div>
+        {{form.errors}}
+    </div>
+    <button form="add_form" type="submit" class="btn btn-outline-secondary mt-4">Log in</button>
+    </form>
+</div>
+
+{%endblock%}
